@@ -273,11 +273,11 @@ static const struct nv_cmd {
   { 'e',       nv_wordcmd,     0,                      false },
   { 'f',       nv_csearch,     NV_NCH_ALW|NV_LANG,     FORWARD },
   { 'g',       nv_g_cmd,       NV_NCH_ALW,             false },
-  { 'h',       nv_left,        NV_RL,                  0 },
+  { 'h',       nv_right,       NV_RL,                  0 },
   { 'i',       nv_edit,        NV_NCH,                 0 },
-  { 'j',       nv_down,        0,                      false },
-  { 'k',       nv_up,          0,                      false },
-  { 'l',       nv_right,       NV_RL,                  0 },
+  { 'j',       nv_up,          0,                      false },
+  { 'k',       nv_down,        0,                      false },
+  { 'l',       nv_left,        NV_RL,                  0 },
   { 'm',       nv_mark,        NV_NCH_NOP,             0 },
   { 'n',       nv_next,        0,                      0 },
   { 'o',       nv_open,        0,                      0 },
@@ -3102,9 +3102,9 @@ static void nv_zet(cmdarg_T *cap)
     old_fdl = -1;                       // force an update
     break;
 
-  case 'j':     // "zj" move to next fold downwards
-  case 'k':     // "zk" move to next fold upwards
-    if (foldMoveTo(true, nchar == 'j' ? FORWARD : BACKWARD,
+  case 'k':     // "zk" move to next fold downwards
+  case 'j':     // "zj" move to next fold upwards
+    if (foldMoveTo(true, nchar == 'k' ? FORWARD : BACKWARD,
                    cap->count1) == false) {
       clearopbeep(cap->oap);
     }
@@ -5435,16 +5435,24 @@ static void nv_g_cmd(cmdarg_T *cap)
     VIsual_reselect = false;
     break;
 
-  // "gh":  start Select mode.
-  // "gH":  start Select line mode.
-  // "g^H": start Select block mode.
+  // "gl":  start Select mode.
+  // "gL":  start Select line mode.
+  // "g^H": start Select block mode (using backspace char).
   case K_BS:
     cap->nchar = Ctrl_H;
     FALLTHROUGH;
-  case 'h':
-  case 'H':
   case Ctrl_H:
-    cap->cmdchar = cap->nchar + ('v' - 'h');
+    cap->cmdchar = Ctrl_V;  // visual block mode
+    cap->arg = true;
+    nv_visual(cap);
+    break;
+  case 'l':
+    cap->cmdchar = 'v';  // visual mode
+    cap->arg = true;
+    nv_visual(cap);
+    break;
+  case 'L':
+    cap->cmdchar = 'V';  // visual line mode
     cap->arg = true;
     nv_visual(cap);
     break;
@@ -5459,11 +5467,11 @@ static void nv_g_cmd(cmdarg_T *cap)
     }
     break;
 
-  // "gj" and "gk" two new funny movement keys -- up and down
+  // "gk" and "gj" two new funny movement keys -- up and down
   // movement based on *screen* line rather than *file* line.
-  case 'j':
+  case 'k':
   case K_DOWN:
-    // with 'nowrap' it works just like the normal "j" command.
+    // with 'nowrap' it works just like the normal "k" command.
     if (!curwin->w_p_wrap) {
       oap->motion_type = kMTLineWise;
       i = cursor_down(cap->count1, oap->op_type == OP_NOP);
@@ -5475,9 +5483,9 @@ static void nv_g_cmd(cmdarg_T *cap)
     }
     break;
 
-  case 'k':
+  case 'j':
   case K_UP:
-    // with 'nowrap' it works just like the normal "k" command.
+    // with 'nowrap' it works just like the normal "j" command.
     if (!curwin->w_p_wrap) {
       oap->motion_type = kMTLineWise;
       i = cursor_up(cap->count1, oap->op_type == OP_NOP);

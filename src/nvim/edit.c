@@ -2961,17 +2961,17 @@ static void ins_ctrl_g(void)
   no_mapping--;
   allow_keys--;
   switch (c) {
-  // CTRL-G k and CTRL-G <Up>: cursor up to Insstart.col
+  // CTRL-G j and CTRL-G <Up>: cursor up to Insstart.col
   case K_UP:
-  case Ctrl_K:
-  case 'k':
+  case Ctrl_J:
+  case 'j':
     ins_up(true);
     break;
 
-  // CTRL-G j and CTRL-G <Down>: cursor down to Insstart.col
+  // CTRL-G k and CTRL-G <Down>: cursor down to Insstart.col
   case K_DOWN:
-  case Ctrl_J:
-  case 'j':
+  case Ctrl_K:
+  case 'k':
     ins_down(true);
     break;
 

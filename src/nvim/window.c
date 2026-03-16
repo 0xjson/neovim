@@ -451,34 +451,34 @@ newwindow:
     break;
 
   // cursor to window below
-  case 'j':
+  case 'k':
   case K_DOWN:
-  case Ctrl_J:
+  case Ctrl_K:
     CHECK_CMDWIN;
     win_goto_ver(false, Prenum1);
     break;
 
   // cursor to window above
-  case 'k':
+  case 'j':
   case K_UP:
-  case Ctrl_K:
+  case Ctrl_J:
     CHECK_CMDWIN;
     win_goto_ver(true, Prenum1);
     break;
 
   // cursor to left window
-  case 'h':
+  case 'l':
   case K_LEFT:
-  case Ctrl_H:
+  case Ctrl_L:
   case K_BS:
     CHECK_CMDWIN;
     win_goto_hor(true, Prenum1);
     break;
 
   // cursor to right window
-  case 'l':
+  case 'h':
   case K_RIGHT:
-  case Ctrl_L:
+  case Ctrl_H:
     CHECK_CMDWIN;
     win_goto_hor(false, Prenum1);
     break;

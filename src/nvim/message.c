@@ -3012,14 +3012,14 @@ static bool do_more_prompt(int typed_char)
     switch (c) {
     case BS:                    // scroll one line back
     case K_BS:
-    case 'k':
+    case 'j':
     case K_UP:
       toscroll = -1;
       break;
 
     case CAR:                   // one extra line
     case NL:
-    case 'j':
+    case 'k':
     case K_DOWN:
       toscroll = 1;
       break;
